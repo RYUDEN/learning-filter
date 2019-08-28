@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CSS3-Filter</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            width: 960px;
+            margin: 0 auto;
+        }
+        .demo-img{
+            width: 600px;
+            display: block;
+            margin: 0 auto;
+        }
+        .control
+        {
+            display: flex;
+        }
+        .form{
+            padding: 50px 10px ;
+            width: 600px;
+        }
+        .form-item{
+            height: 40px;
+            line-height: 40px;
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .form-item input{
+            vertical-align: middle;
+            flex: 1;
+        }
+        .item-name{
+            width: 130px;
+            padding: 0 20px 0 0 ;
+        }
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div><img class="demo-img" :src="imgsrc" v-bind:style="{filter:filter}"></div>
+            <div class="control">
+                <div class="form">
+                        <div class="form-item">
+                            <span class="item-name">选择文件: </span><input type="file" ref="img" @input="createImg()">
+                        </div>
+                        <div class="form-item">
+                            <span class="item-name">高斯模糊: </span><input :title="blur" type="range" min="0" max="20" v-model="blur">
+                        </div>
+                        <div class="form-item">
+                            <span class="item-name">亮度: </span><input :title="brightness" type="range" min="0" max="200" v-model="brightness">
+                        </div>
+                        <div class="form-item">
+                            <span class="item-name">对比度: </span><input :title="contrast" type="range" min="0" max="200" v-model="contrast">
+                        </div>
+                        <div class="form-item">
+                            <span class="item-name">图像阴影: </span>
+                            x:<input :title="dropShadow.x" type="range" min="0" max="50" v-model="dropShadow.x">
+                            y:<input :title="dropShadow.y" type="range" min="0" max="50" v-model="dropShadow.y">
+                            blur:<input :title="dropShadow.blur" type="range" min="0" max="50" v-model="dropShadow.blur">
+                            color:<input :title="dropShadow.color" type="color"  v-model="dropShadow.color">
+                        </div>
+                        <div class="form-item">
+                            <span class="item-name">灰度: </span><input :title="grayscale" type="range" min="0" max="100" v-model="grayscale">
+                        </div>
+                        <div class="form-item">
+                                <span class="item-name">色相旋转: </span><input :title="hueRotate" type="range" min="0" max="720" v-model="hueRotate">
+                        </div>
+                        <div class="form-item">
+                                <span class="item-name">色调反转: </span><input :title="invert" type="range" min="0" max="100" v-model="invert">
+                        </div>
+                        <div class="form-item">
+                                <span class="item-name">透明度: </span><input :title="opacity" type="range" min="0" max="100" v-model="opacity">
+                        </div>
+                        <div class="form-item">
+                                <span class="item-name">饱和度: </span><input :title="saturate" type="range" min="0" max="200" v-model="saturate">
+                        </div>
+                        <div class="form-item">
+                                <span class="item-name">相片做旧: </span><input :title="sepia" type="range" min="0" max="100" v-model="sepia">
+                        </div>
+                        <div class="form-item">
+                            <input type="button" @click="reset()" value="重置">
+                        </div>
+                </div>
+                <div class="filter-info">
+                    <p>filter:{{filter}}</p>
+                    <p>/**</p>
+                        <p>CSS filter 函数 </p>
+    
+                        <p>blur()  高斯模糊，接受css单位长度，不支持百分百 ，默认 0</p>
+                        <p>brightness()  亮度， 0到1，超过1 会更亮 ，默认1</p>
+                        <p>contrast() 对比度，0到1 ，超过1 对比度增加，默认1</p>
+                        <p>drop-shadow(x,y,blur,spread,color) 给图像设置阴影，</p>
+                        <p>grayscale() 灰度 ，0到100%，默认0，</p>
+                        <p>hue-rotate() 给图像应用色相旋转 (x)deg,</p>
+                        <p>invert() 反转输入图像 0到100%，</p>
+                        <p>opacity() 透明度 0到 100%</p>
+                        <p>saturate() 饱和度 0到 100% ，超出过饱，默认 100%，</p>
+                        <p>sepia() 将图像转换为深褐色。0到100%。</p>
+                    <p>*/</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    /**
+        CSS filter 函数 
+
+        blur()  高斯模糊，接受css单位长度，不支持百分百 ，默认 0
+        brightness()  亮度， 0到1，超过1 会更亮 ，默认1
+        contrast() 对比度，0到1 ，超过1 对比度增加，默认1
+        drop-shadow(x,y,blur,spread,color) 给图像设置阴影，
+        grayscale() 灰度 ，0到100%，默认0，
+        hue-rotate() 给图像应用色相旋转 (x)deg,
+        invert() 反转输入图像 0到100%，
+        opacity() 透明度 0到 100%
+        saturate() 饱和度 0到 100% ，超出过饱，默认 100%，
+        sepia() 将图像转换为深褐色。0到100%。
+    */
+    var app = new Vue({
+        el:'#app',
+        data:{
+            imgsrc:'mio.jpg',
+            blur:0,
+            brightness:100,
+            contrast:100,
+            dropShadow:{
+                x:0,
+                y:0,
+                blur:0,
+                color:'#000000'
+            },
+            grayscale:0,
+            hueRotate:0,
+            invert:0,
+            opacity:100,
+            saturate:100,
+            sepia:0,
+        },
+        computed:{
+            filter:function(){
+                let {blur,brightness,contrast,dropShadow,grayscale,hueRotate,invert,opacity,saturate,sepia } = this;
+                let filter = `blur(${blur}px) brightness(${parseFloat(brightness)/100}) contrast(${parseFloat(contrast)/100}) drop-shadow(${dropShadow.x}px ${dropShadow.y}px ${dropShadow.blur}px ${dropShadow.color}) grayscale(${grayscale}%) hue-rotate(${hueRotate}deg) invert(${invert}%) opacity(${opacity}%) saturate(${saturate}%) sepia(${sepia}%)`
+                return filter
+            }
+        },
+        methods:{
+            createImg:function(){
+                var file = this.$refs.img.files[0];
+                let URL=window.URL||window.webkitURL; 
+                this.imgsrc=URL.createObjectURL(file); 
+                this.reset()
+            },
+            reset:function(){
+                this.blur = 0;
+                this.brightness = 100;
+                this.contrast = 100,
+                this.dropShadow = {
+                    x:0,
+                    y:0,
+                    blur:0,
+                    color:'#000000'
+                };
+                this.grayscale = 0 ;
+                this.hueRotate = 0 ;
+                this.invert = 0;
+                this.opacity = 100;
+                this.saturate = 100;
+                this.sepia = 0
+            }
+        }
+    })
+</script>
+</html>
